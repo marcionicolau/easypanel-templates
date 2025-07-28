@@ -5129,6 +5129,15 @@
     ]
   },
   {
+    "slug": "waha",
+    "logo": "logo.svg",
+    "name": "WAHA",
+    "description": "WAHA - WhatsApp HTTP API (REST API) that you can configure in a click! 3 engines are available WEBJS (browser based), NOWEB (websocket nodejs), GOWS (websocket go)",
+    "tags": [
+      "WhatsApp"
+    ]
+  },
+  {
     "slug": "wakatime",
     "logo": "logo.png",
     "name": "Wakapi",

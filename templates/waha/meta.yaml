@@ -1,0 +1,71 @@
+name: WAHA
+description:
+  WAHA - WhatsApp HTTP API (REST API) that you can configure in a click! 3
+  engines are available WEBJS (browser based), NOWEB (websocket nodejs), GOWS
+  (websocket go)
+instructions: null
+changeLog:
+  - date: 2025-7-28
+    description: first release
+links:
+  - label: Documentation
+    url: https://waha.devlike.pro/
+  - label: Github
+    url: https://github.com/devlikeapro/waha
+contributors:
+  - name: Supernova3339
+    url: https://github.com/Supernova3339
+  - name: Berk Sümbül
+    url: https://berksmbl.com
+  - name: Marcio Nicolau
+    url: https://github.com/marcionicolau
+schema:
+  type: object
+  required:
+    - adminUsername
+    - appServiceName
+    - appServiceImage
+    - databaseServiceName
+    - engineName
+    - timezoneString
+    - apiString
+  properties:
+    adminUsername:
+      type: string
+      title: Username to make administrator
+    appServiceName:
+      type: string
+      title: App Service Name
+      default: waha
+    appServiceImage:
+      type: string
+      title: App Service Image
+      default: devlikeapro/waha:latest-2025.7.10
+    databaseServiceName:
+      type: string
+      title: Database Service Name
+      default: waha-db
+    engineName:
+      type: string
+      title: WhatsApp Engine
+      oneOf:
+        - enum:
+            - WEBJS
+          title: WEBJS
+        - enum:
+            - GOWS
+          title: GOWS
+        - enum:
+            - NOWEB
+          title: NOWEB
+    timezoneString:
+      type: string
+      title: Timezone for screenshots and logs
+      default: America/Sao_Paulo
+    apiString:
+      type: string
+      title: API KEY string
+      default: admin
+benefits:
+tags:
+  - WhatsApp

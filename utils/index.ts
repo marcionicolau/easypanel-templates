@@ -2,7 +2,7 @@ import { hashSync } from "bcryptjs";
 import { randomBytes } from "crypto";
 import { z } from "zod";
 import { templateSchema } from "./schema";
-export { randomPassword } from "./schema";
+export { randomPassword, randomSHA512 } from "./schema";
 
 export type Output = z.input<typeof templateSchema>;
 export type Services = Output["services"];

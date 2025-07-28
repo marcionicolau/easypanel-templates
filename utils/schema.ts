@@ -1,7 +1,10 @@
-import { randomBytes } from "crypto";
+import { createHash, randomBytes } from "crypto";
 import { z } from "zod";
 
 export const randomPassword = () => randomBytes(10).toString("hex");
+
+export const randomSHA512 = (message: string) =>
+  createHash("sha512").update(message).digest("hex");
 
 const emptyToUndefined = (value: any) => {
   if (typeof value !== "string") return value;
