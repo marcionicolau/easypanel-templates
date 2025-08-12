@@ -1,0 +1,146 @@
+name: R2R
+description:
+  R2R is the most advanced AI retrieval system. And with R2R, getting your AI
+  application started is simple.
+instructions: null
+changeLog:
+  - date: 2025-8-12
+    description: first release
+links:
+  - label: Documentation
+    url: https://r2r-docs.sciphi.ai/documentation/overview/
+  - label: Github
+    url: https://github.com/SciPhi-AI/R2R
+contributors:
+  - name: Supernova3339
+    url: https://github.com/Supernova3339
+  - name: Berk Sümbül
+    url: https://berksmbl.com
+  - name: Marcio Nicolau
+    url: https://github.com/marcionicolau
+schema:
+  type: object
+  required:
+    - hatchetPostgresUsername
+    - hatchetPostgresImage
+    - databaseFileServerUsername
+    - databaseFileServerImage
+    - databaseFileServerMaxConnections
+    - hatchetRabbitmqUsername
+    - hatchetRabbitmqImage
+    - hatchetMigrationImage
+    - hatchetSetupConfigImage
+    - hatchetEngineImage
+    - hatchetDashboardImage
+    - hatchetSetupTokenImage
+    - unstructuredImage
+    - graphClusteringImage
+    - r2rImage
+    - r2rDashboardImage
+    - adminUsername
+    - appServiceName
+    - appServiceImage
+    - databaseServiceName
+    - engineName
+    - timezoneString
+    - apiString
+  properties:
+    hatchetPostgresUsername:
+      type: string
+      title: Hatchet Postgres Username
+    hatchetPostgresImage:
+      type: string
+      title: Hatchet Postgres Image
+    databaseFileServerUsername:
+      type: string
+      title: Database File Server Username
+    databaseFileServerImage:
+      type: string
+      title: Database File Server Image
+    databaseFileServerMaxConnections:
+      type: integer
+      title: Database File Server Max Connections
+    hatchetRabbitmqUsername:
+      type: string
+      title: Hatchet Rabbitmq Username
+    hatchetRabbitmqImage:
+      type: string
+      title: Hatchet Rabbitmq Image
+      default: rabbitmq:3-management
+    hatchetMigrationImage:
+      type: string
+      title: Hatchet Migration Image
+      default: ghcr.io/hatchet-dev/hatchet/hatchet-migrate:v0.53.15
+    hatchetSetupConfigImage:
+      type: string
+      title: Hatchet Setup Config Image
+      default: ghcr.io/hatchet-dev/hatchet/hatchet-admin:v0.53.15
+    hatchetEngineImage:
+      type: string
+      title: Hatchet Engine Image
+      default: ghcr.io/hatchet-dev/hatchet/hatchet-engine:v0.53.15
+    hatchetDashboardImage:
+      type: string
+      title: Hatchet Dashboard Image
+      default: ghcr.io/hatchet-dev/hatchet/hatchet-dashboard:v0.53.15
+    hatchetSetupTokenImage:
+      type: string
+      title: Hatchet Setup Token Image
+      default: ghcr.io/hatchet-dev/hatchet/hatchet-admin:v0.53.15
+    unstructuredImage:
+      type: string
+      title: Unstructured Image
+      default: ragtoriches/unst-prod
+    graphClusteringImage:
+      type: string
+      title: Graph Clustering Image
+      default: ragtoriches/cluster-prod:latest
+    r2rImage:
+      type: string
+      title: R2R Image
+      default: rsciphiai/r2r:latest
+    r2rDashboardImage:
+      type: string
+      title: R2R Dashboard Image
+      default: sciphiai/r2r-dashboard:1.0.3
+    adminUsername:
+      type: string
+      title: Username to make administrator
+    appServiceName:
+      type: string
+      title: App Service Name
+      default: waha
+    appServiceImage:
+      type: string
+      title: App Service Image
+      default: devlikeapro/waha:latest-2025.7.10
+    databaseServiceName:
+      type: string
+      title: Database Service Name
+      default: waha-db
+    engineName:
+      type: string
+      title: WhatsApp Engine
+      oneOf:
+        - enum:
+            - WEBJS
+          title: WEBJS
+        - enum:
+            - GOWS
+          title: GOWS
+        - enum:
+            - NOWEB
+          title: NOWEB
+    timezoneString:
+      type: string
+      title: Timezone for screenshots and logs
+      default: America/Sao_Paulo
+    apiString:
+      type: string
+      title: API KEY string
+      default: admin
+benefits:
+tags:
+  - RAG
+  - AI
+  - Retrieval
