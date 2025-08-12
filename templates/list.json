@@ -4096,6 +4096,17 @@
     ]
   },
   {
+    "slug": "r2r",
+    "logo": "logo.svg",
+    "name": "R2R",
+    "description": "R2R is the most advanced AI retrieval system. And with R2R, getting your AI application started is simple.",
+    "tags": [
+      "RAG",
+      "AI",
+      "Retrieval"
+    ]
+  },
+  {
     "slug": "rabbitmq",
     "logo": "logo.svg",
     "name": "RabbitMQ",

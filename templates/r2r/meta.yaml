@@ -40,9 +40,11 @@ schema:
     hatchetPostgresImage:
       type: string
       title: Hatchet Postgres Image
+      default: postgres:17
     databaseFileServerImage:
       type: string
       title: Database File Server Image
+      default: pgvector/pgvector:pg16
     databaseFileServerMaxConnections:
       type: integer
       title: Database File Server Max Connections
@@ -54,27 +56,27 @@ schema:
     hatchetMigrationImage:
       type: string
       title: Hatchet Migration Image
-      default: ghcr.io/hatchet-dev/hatchet/hatchet-migrate:v0.53.15
+      default: ghcr.io/hatchet-dev/hatchet/hatchet-migrate:v0.70.6
     hatchetSetupConfigImage:
       type: string
       title: Hatchet Setup Config Image
-      default: ghcr.io/hatchet-dev/hatchet/hatchet-admin:v0.53.15
+      default: ghcr.io/hatchet-dev/hatchet/hatchet-admin:v0.70.6
     hatchetEngineImage:
       type: string
       title: Hatchet Engine Image
-      default: ghcr.io/hatchet-dev/hatchet/hatchet-engine:v0.53.15
+      default: ghcr.io/hatchet-dev/hatchet/hatchet-engine:v0.70.6
     hatchetDashboardImage:
       type: string
       title: Hatchet Dashboard Image
-      default: ghcr.io/hatchet-dev/hatchet/hatchet-dashboard:v0.53.15
+      default: ghcr.io/hatchet-dev/hatchet/hatchet-dashboard:v0.70.6
     hatchetSetupTokenImage:
       type: string
       title: Hatchet Setup Token Image
-      default: ghcr.io/hatchet-dev/hatchet/hatchet-admin:v0.53.15
+      default: ghcr.io/hatchet-dev/hatchet/hatchet-admin:v0.70.6
     unstructuredImage:
       type: string
       title: Unstructured Image
-      default: ragtoriches/unst-prod
+      default: ragtoriches/unst-prod:latest
     graphClusteringImage:
       type: string
       title: Graph Clustering Image
@@ -82,11 +84,11 @@ schema:
     r2rImage:
       type: string
       title: R2R Image
-      default: rsciphiai/r2r:latest
+      default: sciphiai/r2r:3.6.5
     r2rDashboardImage:
       type: string
       title: R2R Dashboard Image
-      default: sciphiai/r2r-dashboard:1.0.3
+      default: sciphiai/r2r-dashboard:1.0.4
     r2rDashboardEmail:
       type: string
       title: R2R Dashboard Email
