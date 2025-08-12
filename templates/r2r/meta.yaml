@@ -21,12 +21,9 @@ contributors:
 schema:
   type: object
   required:
-    - hatchetPostgresUsername
     - hatchetPostgresImage
-    - databaseFileServerUsername
     - databaseFileServerImage
     - databaseFileServerMaxConnections
-    - hatchetRabbitmqUsername
     - hatchetRabbitmqImage
     - hatchetMigrationImage
     - hatchetSetupConfigImage
@@ -37,32 +34,19 @@ schema:
     - graphClusteringImage
     - r2rImage
     - r2rDashboardImage
-    - adminUsername
+    - r2rDashboardEmail
     - appServiceName
-    - appServiceImage
-    - databaseServiceName
-    - engineName
-    - timezoneString
-    - apiString
   properties:
-    hatchetPostgresUsername:
-      type: string
-      title: Hatchet Postgres Username
     hatchetPostgresImage:
       type: string
       title: Hatchet Postgres Image
-    databaseFileServerUsername:
-      type: string
-      title: Database File Server Username
     databaseFileServerImage:
       type: string
       title: Database File Server Image
     databaseFileServerMaxConnections:
       type: integer
       title: Database File Server Max Connections
-    hatchetRabbitmqUsername:
-      type: string
-      title: Hatchet Rabbitmq Username
+      default: 1024
     hatchetRabbitmqImage:
       type: string
       title: Hatchet Rabbitmq Image
@@ -103,42 +87,14 @@ schema:
       type: string
       title: R2R Dashboard Image
       default: sciphiai/r2r-dashboard:1.0.3
-    adminUsername:
+    r2rDashboardEmail:
       type: string
-      title: Username to make administrator
+      title: R2R Dashboard Email
+      default: admin@example.com
     appServiceName:
       type: string
       title: App Service Name
-      default: waha
-    appServiceImage:
-      type: string
-      title: App Service Image
-      default: devlikeapro/waha:latest-2025.7.10
-    databaseServiceName:
-      type: string
-      title: Database Service Name
-      default: waha-db
-    engineName:
-      type: string
-      title: WhatsApp Engine
-      oneOf:
-        - enum:
-            - WEBJS
-          title: WEBJS
-        - enum:
-            - GOWS
-          title: GOWS
-        - enum:
-            - NOWEB
-          title: NOWEB
-    timezoneString:
-      type: string
-      title: Timezone for screenshots and logs
-      default: America/Sao_Paulo
-    apiString:
-      type: string
-      title: API KEY string
-      default: admin
+      default: r2r
 benefits:
 tags:
   - RAG
