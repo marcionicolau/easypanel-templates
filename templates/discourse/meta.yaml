@@ -1,6 +1,11 @@
 name: Discourse
-description: Discourse is a modern, open-source discussion platform that provides a clean, intuitive interface for community discussions. It's perfect for forums, mailing lists, chat rooms, and more.
-instructions: Once clicked, please wait for the installation to complete, it will take time. It is also resource intensive, so make sure you have more than 8GB of RAM. 
+description:
+  Discourse is a modern, open-source discussion platform that provides a clean,
+  intuitive interface for community discussions. It's perfect for forums,
+  mailing lists, chat rooms, and more.
+instructions:
+  Once clicked, please wait for the installation to complete, it will take time.
+  It is also resource intensive, so make sure you have more than 8GB of RAM.
 changeLog:
   - date: 2025-04-30
     description: Initial release
@@ -73,4 +78,4 @@ tags:
   - Discussion
   - Self-hosted
   - Open Source
-  - Community 
+  - Community

@@ -21,9 +21,11 @@ contributors:
 schema:
   type: object
   required:
+    - fileServerDatabaseImage
+    - fileServerDatabaseMaxConnections
+    - fileServerServiceName
+    - hatchetServiceName
     - hatchetPostgresImage
-    - databaseFileServerImage
-    - databaseFileServerMaxConnections
     - hatchetRabbitmqImage
     - hatchetMigrationImage
     - hatchetSetupConfigImage
@@ -37,18 +39,26 @@ schema:
     - r2rDashboardEmail
     - appServiceName
   properties:
+    fileServerDatabaseImage:
+      type: string
+      title: File Server Database Image
+      default: pgvector/pgvector:pg17
+    fileServerDatabaseMaxConnections:
+      type: integer
+      title: File Server Database Max Connections
+      default: 1024
+    fileServerServiceName:
+      type: string
+      title: File Server Service Name
+      default: fs
     hatchetPostgresImage:
       type: string
       title: Hatchet Postgres Image
       default: postgres:17
-    databaseFileServerImage:
+    hatchetServiceName:
       type: string
-      title: Database File Server Image
-      default: pgvector/pgvector:pg16
-    databaseFileServerMaxConnections:
-      type: integer
-      title: Database File Server Max Connections
-      default: 1024
+      title: Hatchet Service Name
+      default: hatchet
     hatchetRabbitmqImage:
       type: string
       title: Hatchet Rabbitmq Image

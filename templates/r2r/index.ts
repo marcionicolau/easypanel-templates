@@ -17,20 +17,20 @@ export function generate(input: Input): Output {
     `HATCHET_CLIENT_GRPC_MAX_RECV_MESSAGE_LENGTH=134217728`,
     `HATCHET_CLIENT_GRPC_MAX_SEND_MESSAGE_LENGTH=134217728`,
     `DATABASE_POSTGRES_PORT=5432`,
-    `DATABASE_POSTGRES_HOST=hatchet-postgres`,
-    `DATABASE_POSTGRES_USERNAME=hatchet_user`,
+    `DATABASE_POSTGRES_HOST=$(PROJECT_NAME)_${input.appServiceName}-${input.hatchetServiceName}-db`,
+    `DATABASE_POSTGRES_USERNAME=postgres`,
     `DATABASE_POSTGRES_PASSWORD=${randomPasswordPostgres}`,
-    `HATCHET_DATABASE_POSTGRES_DB_NAME=hatchet`,
-    `POSTGRES_DB=hatchet`,
-    `POSTGRES_USER=hatchet_user`,
+    `HATCHET_DATABASE_POSTGRES_DB_NAME=$(PROJECT_NAME)`,
+    `POSTGRES_DB=$(PROJECT_NAME)`,
+    `POSTGRES_USER=postgres`,
     `POSTGRES_PASSWORD=${randomPasswordPostgres}`,
-    `SERVER_TASKQUEUE_RABBITMQ_URL=amqp://user:password@hatchet-rabbitmq:5672/`,
-    `SERVER_AUTH_COOKIE_DOMAIN=http://host.docker.internal:7274`,
-    `SERVER_URL=http://host.docker.internal:7274`,
+    `SERVER_TASKQUEUE_RABBITMQ_URL=amqp://user:${randomRabbitmqPassword}@$(PROJECT_NAME)_${input.appServiceName}-${input.hatchetServiceName}-rabbitmq:5672/`,
+    `SERVER_AUTH_COOKIE_DOMAIN=https://$(PRIMARY_DOMAIN)`,
+    `SERVER_URL=https://$(PRIMARY_DOMAIN)`,
     `SERVER_AUTH_COOKIE_INSECURE=t`,
     `SERVER_GRPC_BIND_ADDRESS=0.0.0.0`,
     `SERVER_GRPC_INSECURE=t`,
-    `SERVER_GRPC_BROADCAST_ADDRESS=hatchet-engine:7077`,
+    `SERVER_GRPC_BROADCAST_ADDRESS=$(PROJECT_NAME)_${input.appServiceName}-${input.hatchetServiceName}-engine:7077`,
     `SERVER_GRPC_MAX_MSG_SIZE=134217728`,
     `SERVER_GRPC_PORT="7077"`,
   ].join("\n");
@@ -42,27 +42,27 @@ export function generate(input: Input): Output {
     `R2R_LOG_LEVEL=INFO`,
     `R2R_CONFIG_NAME=`,
     `R2R_CONFIG_PATH=/app/user_configs/my_config.toml`,
-    `R2R_PROJECT_NAME=r2r_default`,
+    `R2R_PROJECT_NAME=$(PROJECT_NAME)_${input.appServiceName}-project`,
     `R2R_SECRET_KEY=`,
     `R2R_USER_TOOLS_PATH=`,
     `R2R_LOG_FORMAT=`,
     `# Postgres Configuration`,
     `R2R_POSTGRES_USER=postgres`,
     `R2R_POSTGRES_PASSWORD=${randomPasswordPostgres}`,
-    `R2R_POSTGRES_HOST=postgres`,
+    `R2R_POSTGRES_HOST=$(PROJECT_NAME)_${input.appServiceName}-${input.fileServerServiceName}-db`,
     `R2R_POSTGRES_PORT=5432`,
-    `R2R_POSTGRES_DBNAME=postgres`,
-    `R2R_POSTGRES_MAX_CONNECTIONS=1024`,
+    `R2R_POSTGRES_DBNAME=$(PROJECT_NAME)`,
+    `R2R_POSTGRES_MAX_CONNECTIONS=${input.fileServerDatabaseMaxConnections}`,
     `R2R_POSTGRES_STATEMENT_CACHE_SIZE=100`,
     `# Hatchet`,
     `HATCHET_CLIENT_TLS_STRATEGY=none`,
     `# Unstructured`,
     `UNSTRUCTURED_API_KEY=`,
     `UNSTRUCTURED_API_URL=https://api.unstructured.io/general/v0/general`,
-    `UNSTRUCTURED_SERVICE_URL=http://unstructured:7275`,
+    `UNSTRUCTURED_SERVICE_URL=https://$(PROJECT_NAME)_${input.appServiceName}-unstructured:7275`,
     `UNSTRUCTURED_NUM_WORKERS=10`,
     `# Graphologic`,
-    `CLUSTERING_SERVICE_URL=http://graph_clustering:7276`,
+    `CLUSTERING_SERVICE_URL=https://$(PROJECT_NAME)_${input.appServiceName}-graph_clustering:7276`,
   ].join("\n");
 
   const env = [hatchet_env, r2r_env_full].join("\n");
@@ -70,7 +70,8 @@ export function generate(input: Input): Output {
   services.push({
     type: "postgres",
     data: {
-      serviceName: "postgres",
+      serviceName: `${input.appServiceName}-${input.fileServerServiceName}-db`,
+      image: input.fileServerDatabaseImage,
       password: randomPasswordPostgres,
     },
   });
@@ -78,7 +79,8 @@ export function generate(input: Input): Output {
   services.push({
     type: "postgres",
     data: {
-      serviceName: "hatchet-postgres",
+      serviceName: `${input.appServiceName}-${input.hatchetServiceName}-db`,
+      image: input.hatchetPostgresImage,
       password: randomPasswordPostgres,
     },
   });
@@ -86,7 +88,7 @@ export function generate(input: Input): Output {
   services.push({
     type: "app",
     data: {
-      serviceName: "hatchet-rabbitmq",
+      serviceName: `${input.appServiceName}-${input.hatchetServiceName}-rabbitmq`,
       source: {
         type: "image",
         image: input.hatchetRabbitmqImage,
@@ -115,45 +117,7 @@ export function generate(input: Input): Output {
   services.push({
     type: "app",
     data: {
-      serviceName: "hatchet-create-db",
-      env: hatchet_env,
-      source: {
-        type: "image",
-        image: "postgres:17",
-      },
-      mounts: [
-        {
-          type: "file",
-          content: [
-            "#!/bin/bash",
-            "",
-            "set -e",
-            "echo 'Waiting for PostgreSQL to be ready...'",
-            "while ! pg_isready -h hatchet-postgres -p 5432 -U ${HATCHET_POSTGRES_USER:-hatchet_user}; do",
-            "  sleep 1",
-            "done",
-            "",
-            "echo 'PostgreSQL is ready, checking if database exists...'",
-            "if ! PGPASSWORD=${HATCHET_POSTGRES_PASSWORD:-hatchet_password} psql -h hatchet-postgres -p 5432 -U ${HATCHET_POSTGRES_USER:-hatchet_user} -lqt | grep -qw ${HATCHET_POSTGRES_DBNAME:-hatchet}; then",
-            "echo 'Database does not exist, creating it...'",
-            "PGPASSWORD=${HATCHET_POSTGRES_PASSWORD:-hatchet_password} createdb -h hatchet-postgres -p 5432 -U ${HATCHET_POSTGRES_USER:-hatchet_user} -w ${HATCHET_POSTGRES_DBNAME:-hatchet}",
-            "fi",
-            "",
-            "else",
-            "echo 'Database already exists, skipping creation.'",
-            "fi",
-            "",
-          ].join("\n"),
-          mountPath: "/scripts/create-hatchet-db.sh",
-        },
-      ],
-    },
-  });
-
-  services.push({
-    type: "app",
-    data: {
-      serviceName: "hatchet-migration",
+      serviceName: `${input.appServiceName}-${input.hatchetServiceName}-migration`,
       env: hatchet_env,
       source: {
         type: "image",
@@ -165,7 +129,7 @@ export function generate(input: Input): Output {
   services.push({
     type: "app",
     data: {
-      serviceName: "hatchet-setup-config",
+      serviceName: `${input.appServiceName}-${input.hatchetServiceName}-setup-config`,
       env: hatchet_env,
       source: {
         type: "image",
@@ -189,7 +153,7 @@ export function generate(input: Input): Output {
   services.push({
     type: "app",
     data: {
-      serviceName: "hatchet-engine",
+      serviceName: `${input.appServiceName}-${input.hatchetServiceName}-engine`,
       env: hatchet_env,
       source: {
         type: "image",
@@ -219,7 +183,7 @@ export function generate(input: Input): Output {
   services.push({
     type: "app",
     data: {
-      serviceName: "hatchet-dashboard",
+      serviceName: `${input.appServiceName}-${input.hatchetServiceName}-dashboard`,
       env: hatchet_env,
       source: {
         type: "image",
@@ -256,7 +220,7 @@ export function generate(input: Input): Output {
   services.push({
     type: "app",
     data: {
-      serviceName: "setup-token",
+      serviceName: `${input.appServiceName}-${input.hatchetServiceName}-setup-token`,
       source: {
         type: "image",
         image: input.hatchetSetupTokenImage,
@@ -344,18 +308,24 @@ export function generate(input: Input): Output {
   services.push({
     type: "app",
     data: {
-      serviceName: "unstructured",
+      serviceName: `${input.appServiceName}-unstructured`,
       source: {
         type: "image",
         image: input.unstructuredImage,
       },
+      domains: [
+        {
+          host: "$(EASYPANEL_DOMAIN)",
+          port: 7275,
+        },
+      ],
     },
   });
 
   services.push({
     type: "app",
     data: {
-      serviceName: "graph_clustering",
+      serviceName: `${input.appServiceName}-graph_clustering`,
       source: {
         type: "image",
         image: input.graphClusteringImage,
@@ -497,8 +467,8 @@ export function generate(input: Input): Output {
       ],
       ports: [
         {
-          published: 7273,
-          target: 3000,
+          published: 3000,
+          target: 7273,
           protocol: "tcp",
         },
       ],
